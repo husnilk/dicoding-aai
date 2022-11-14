@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -26,8 +27,6 @@ import retrofit2.Response
 
 class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
 
-    private val appBarConfiguration: AppBarConfiguration? = null
-
     private var binding: ActivityHomeBinding? = null
     private var isLoggedIn = false
     private var adapter: StoryAdapter? = null
@@ -38,6 +37,7 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         setContentView(binding!!.root)
         setSupportActionBar(binding!!.toolbar)
 
+        binding!!.progressLoading.visibility = View.GONE
         binding!!.fab.setOnClickListener {
             val addIntent = Intent(this@HomeActivity, AddStoryActivity::class.java)
             startActivity(addIntent)
@@ -100,21 +100,23 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
     }
 
     fun getStories(){
+        binding!!.progressLoading.visibility = View.VISIBLE
         val service = NetworkConfig.service
         val response = service.getAllStories(getToken(this))
         response.enqueue(object : Callback<GetStoryResponse?>{
+
             override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
-                Toast.makeText(this@HomeActivity, "Berhasil terhubung ke server", Toast.LENGTH_SHORT).show()
                 var getStoryResponse : GetStoryResponse? = response.body()
                 if(getStoryResponse != null){
                     val listStory = getStoryResponse.listStory
-                    Log.d("HOME_DBG", listStory?.size.toString());
                     adapter?.setListStory(listStory as List<StoryItem>);
                 }
+                binding!!.progressLoading.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
                 Toast.makeText(this@HomeActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
+                binding!!.progressLoading.visibility = View.GONE
             }
 
         })

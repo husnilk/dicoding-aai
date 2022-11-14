@@ -9,4 +9,16 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="login">Login</string>
+    <string name="link_registrasi">Registrasi? Klik Disini</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="link_login">Login? Klik Disini</string>
+    <string name="nama">Nama</string>
+    <string name="description">Deskripsi</string>
+    <string name="tanggal">Tanggal</string>
+    <string name="tambah">Tambah</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 </resources>

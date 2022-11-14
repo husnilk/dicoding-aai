@@ -31,10 +31,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding!!.buttonLogin.setOnClickListener {
+            binding.progressLogin.visibility = View.VISIBLE
             val email = binding!!.edLoginEmail.text.toString()
             val password = binding!!.edLoginPassword.text.toString()
             userAuthCheck(email, password)
         }
+
+        binding.progressLogin.visibility = View.GONE
 
         playAnimation()
     }
@@ -57,6 +60,9 @@ class LoginActivity : AppCompatActivity() {
                         editor.putString(Constant.PREF_KEY_NAME, loginResult.name)
                         editor.putString(Constant.PREF_KEY_USERID, loginResult.userId)
                         editor.apply()
+
+                        binding.progressLogin.visibility = View.GONE
+
                         loadMainActivity()
                     } else {
                         Toast.makeText(this@LoginActivity, "Gagal Login", Toast.LENGTH_SHORT).show()
@@ -67,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<LoginResponse?>, t: Throwable) {
+                binding.progressLogin.visibility = View.GONE
                 Toast.makeText(this@LoginActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
             }
         })

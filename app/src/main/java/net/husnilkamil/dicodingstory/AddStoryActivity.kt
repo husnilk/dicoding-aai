@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -36,28 +37,29 @@ class AddStoryActivity : AppCompatActivity() {
     private var currentPhotoPath: String? = null
     private var uploadFile: File? = null
 
-    var launcherGallery = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImage = result.data!!.data
-            binding!!.ivPhoto.setImageURI(selectedImage)
-            try {
-                val myFile = selectedImage?.let { uriToFile(it, this@AddStoryActivity) }
-                uploadFile = myFile
-            } catch (e: IOException) {
-                e.printStackTrace()
+    var launcherGallery =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val selectedImage = result.data!!.data
+                binding!!.ivPhoto.setImageURI(selectedImage)
+                try {
+                    val myFile = selectedImage?.let { uriToFile(it, this@AddStoryActivity) }
+                    uploadFile = myFile
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
         }
-    }
-    var launcherCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val myFile = File(currentPhotoPath)
-            uploadFile = myFile
-            val imageBitmap = BitmapFactory.decodeFile(myFile.path)
-            binding!!.ivPhoto.setImageBitmap(imageBitmap)
+
+    var launcherCamera =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val myFile = File(currentPhotoPath)
+                uploadFile = myFile
+                val imageBitmap = BitmapFactory.decodeFile(myFile.path)
+                binding!!.ivPhoto.setImageBitmap(imageBitmap)
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +67,7 @@ class AddStoryActivity : AppCompatActivity() {
             layoutInflater
         )
         setContentView(binding!!.root)
+        binding!!.progressUpload.visibility = View.GONE
         binding!!.buttonAdd.setOnClickListener { uploadStory() }
         binding!!.buttonCamera.setOnClickListener { takePicture() }
         binding!!.buttonGalery.setOnClickListener { pickImage() }
@@ -96,21 +99,25 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadStory() {
+
+        binding!!.progressUpload.visibility = View.VISIBLE
         if (uploadFile != null) {
             val description = binding!!.edAddDescription.text.toString()
 
             val desc = description.toRequestBody("text/plain".toMediaType())
             val img = uploadFile!!.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData("photo", uploadFile!!.name, img)
+            val imageMultiPart: MultipartBody.Part =
+                MultipartBody.Part.createFormData("photo", uploadFile!!.name, img)
 
             val service = NetworkConfig.service
             val response = service.addStories(getToken(this), imageMultiPart, desc)
             response.enqueue(object : Callback<ObjectResponse?> {
 
                 override fun onResponse(call: Call<ObjectResponse?>,response: Response<ObjectResponse?>) {
-                    Log.d("ADD-DBG", response.toString())
                     val objectResponse = response.body()
+                    Log.d("ADD-DBG", response.toString())
                     if (objectResponse != null && !objectResponse.error!!) {
+                        if (!objectResponse.error) {
                             Toast.makeText(
                                 this@AddStoryActivity,
                                 objectResponse.message,
@@ -120,15 +127,28 @@ class AddStoryActivity : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this@AddStoryActivity,
-                                "Gagal mengupload story",
+                                objectResponse.message,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-
+                    } else {
+                        Toast.makeText(
+                            this@AddStoryActivity,
+                            "Gagal Upload Story",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    binding!!.progressUpload.visibility = View.GONE
                 }
 
                 override fun onFailure(call: Call<ObjectResponse?>, t: Throwable) {
-                    Log.d("DBG-ADD", t.message!!)
+                    Log.d("ADD-DBG", t.message.toString())
+                    Toast.makeText(
+                        this@AddStoryActivity,
+                        "Terjadi kesalahan teknis",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    binding!!.progressUpload.visibility = View.GONE
                 }
             })
         } else {
