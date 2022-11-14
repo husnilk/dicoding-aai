@@ -13,10 +13,12 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class RegisterActivity : AppCompatActivity() {
+
     private val TAG = "RegisterDebug"
     var binding: ActivityRegisterBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
@@ -27,6 +29,7 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding!!.edRegisterEmail.text.toString()
             registerUser(username, email, password)
         }
+
         binding!!.textLogin.setOnClickListener {
             val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
             startActivity(loginIntent)
@@ -35,17 +38,19 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser(username: String, email: String, password: String) {
+
         val service = NetworkConfig.service
+
         val response = service.registerUser(username, email, password)
-        response!!.enqueue(object : Callback<ObjectResponse?> {
-            override fun onResponse(
-                call: Call<ObjectResponse?>,
-                response: Response<ObjectResponse?>
-            ) {
+        response.enqueue(object : Callback<ObjectResponse?> {
+
+            override fun onResponse(call: Call<ObjectResponse?>,response: Response<ObjectResponse?>)
+            {
                 Log.d(TAG, response.toString())
                 Log.d(TAG, response.message())
                 val registrationResponse = response.body()
                 Log.d(TAG, registrationResponse.toString())
+
                 if (registrationResponse != null && !registrationResponse.error!!) {
                     val loginIntent = Intent(this@RegisterActivity, LoginActivity::class.java)
                     startActivity(loginIntent)
@@ -64,7 +69,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<ObjectResponse?>, t: Throwable) {
+            override fun onFailure(call: Call<ObjectResponse?>, t: Throwable)
+            {
                 Log.d(TAG, t.message!!)
                 Toast.makeText(
                     this@RegisterActivity,
@@ -73,5 +79,6 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
             }
         })
+
     }
 }

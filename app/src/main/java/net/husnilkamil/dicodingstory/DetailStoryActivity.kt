@@ -6,7 +6,7 @@ import com.bumptech.glide.Glide
 import net.husnilkamil.dicodingstory.databinding.ActivityDetailStoryBinding
 import net.husnilkamil.dicodingstory.datamodels.StoryItem
 
-class StoryActivity : AppCompatActivity() {
+class DetailStoryActivity : AppCompatActivity() {
     var name: String? = null
     var photo: String? = null
     var description: String? = null

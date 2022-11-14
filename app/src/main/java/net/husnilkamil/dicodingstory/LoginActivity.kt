@@ -19,7 +19,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -38,14 +39,13 @@ class LoginActivity : AppCompatActivity() {
         playAnimation()
     }
 
-    private fun userAuthCheck(email: String, password: String) {
+    private fun userAuthCheck(email: String, password: String)
+    {
         val service = NetworkConfig.service
         val response = service.loginUser(email, password)
-        response!!.enqueue(object : Callback<LoginResponse?> {
-            override fun onResponse(
-                call: Call<LoginResponse?>,
-                response: Response<LoginResponse?>
-            ) {
+        response.enqueue(object : Callback<LoginResponse?> {
+
+            override fun onResponse(call: Call<LoginResponse?>,response: Response<LoginResponse?>) {
                 val loginResponse = response.body()
                 if (loginResponse != null) {
                     val loginResult = loginResponse.loginResult
@@ -66,7 +66,9 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<LoginResponse?>, t: Throwable) {}
+            override fun onFailure(call: Call<LoginResponse?>, t: Throwable) {
+                Toast.makeText(this@LoginActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
