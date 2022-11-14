@@ -2,6 +2,7 @@ package net.husnilkamil.dicodingstory
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,6 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
 import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
+import net.husnilkamil.dicodingstory.helpers.Constant
+import net.husnilkamil.dicodingstory.helpers.createCustomTempFile
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.helpers.uriToFile
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
@@ -47,9 +50,7 @@ class AddStoryActivity : AppCompatActivity() {
             }
         }
     }
-    var launcherCamera = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
+    var launcherCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val myFile = File(currentPhotoPath)
             uploadFile = myFile
@@ -80,45 +81,42 @@ class AddStoryActivity : AppCompatActivity() {
     private fun takePicture() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.resolveActivity(this.packageManager)
-        var myFile: File? = null
-        try {
-            myFile = net.husnilkamil.dicodingstory.helpers.createTempFile(this)
-            val photoUri = FileProvider.getUriForFile(
-                this,
-                "net.husnilkamil.ceritakita",
-                myFile
+
+        createCustomTempFile(application).also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                this@AddStoryActivity,
+                "net.husnilkamil.dicodingstory",
+                it
             )
-            currentPhotoPath = myFile.absolutePath
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            currentPhotoPath = it.absolutePath
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             launcherCamera.launch(intent)
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
+
     }
 
     private fun uploadStory() {
         if (uploadFile != null) {
-            val description = binding!!.edAddDescription.toString()
+            val description = binding!!.edAddDescription.text.toString()
 
             val desc = description.toRequestBody("text/plain".toMediaType())
             val img = uploadFile!!.asRequestBody("image/jpeg".toMediaTypeOrNull())
-            val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData("file", uploadFile!!.name, img)
+            val imageMultiPart: MultipartBody.Part = MultipartBody.Part.createFormData("photo", uploadFile!!.name, img)
 
             val service = NetworkConfig.service
             val response = service.addStories(getToken(this), imageMultiPart, desc)
             response.enqueue(object : Callback<ObjectResponse?> {
-                override fun onResponse(
-                    call: Call<ObjectResponse?>,
-                    response: Response<ObjectResponse?>
-                ) {
+
+                override fun onResponse(call: Call<ObjectResponse?>,response: Response<ObjectResponse?>) {
+                    Log.d("ADD-DBG", response.toString())
                     val objectResponse = response.body()
-                    if (objectResponse != null) {
-                        if (!objectResponse.error!!) {
+                    if (objectResponse != null && !objectResponse.error!!) {
                             Toast.makeText(
                                 this@AddStoryActivity,
-                                "Story berhasil diupload",
+                                objectResponse.message,
                                 Toast.LENGTH_SHORT
                             ).show()
+                            finish()
                         } else {
                             Toast.makeText(
                                 this@AddStoryActivity,
@@ -126,10 +124,7 @@ class AddStoryActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else {
-                        Toast.makeText(this@AddStoryActivity, "Wah kenapa ini?", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+
                 }
 
                 override fun onFailure(call: Call<ObjectResponse?>, t: Throwable) {
@@ -139,7 +134,7 @@ class AddStoryActivity : AppCompatActivity() {
         } else {
             Toast.makeText(
                 this@AddStoryActivity,
-                "Silahkan masukkan berkas gambar terlebih dahulu",
+                "Silahkan tambahkan/pilih photo terlebih dahulu",
                 Toast.LENGTH_SHORT
             ).show()
         }

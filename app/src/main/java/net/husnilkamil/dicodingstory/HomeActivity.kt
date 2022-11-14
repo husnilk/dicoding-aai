@@ -2,6 +2,7 @@ package net.husnilkamil.dicodingstory
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -29,6 +30,7 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
 
     private var binding: ActivityHomeBinding? = null
     private var isLoggedIn = false
+    private var adapter: StoryAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +43,17 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
             startActivity(addIntent)
         }
 
-        val adapter = StoryAdapter()
-        adapter.setListener(this)
+        adapter = StoryAdapter()
+        adapter!!.setListener(this)
         binding!!.rvListCerita.adapter = adapter
         val layoutManager = GridLayoutManager(this, 2)
         binding!!.rvListCerita.layoutManager = layoutManager
         isLoggedInCheck
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getStories()
     }
 
     private val isLoggedInCheck: Unit
@@ -58,6 +65,7 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
                 val loginIntent = Intent(this, LoginActivity::class.java)
                 startActivity(loginIntent)
                 finish()
+                return
             }
         }
 
@@ -96,10 +104,12 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         val response = service.getAllStories(getToken(this))
         response.enqueue(object : Callback<GetStoryResponse?>{
             override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
-                var getStoryResponse = response.body()
+                Toast.makeText(this@HomeActivity, "Berhasil terhubung ke server", Toast.LENGTH_SHORT).show()
+                var getStoryResponse : GetStoryResponse? = response.body()
                 if(getStoryResponse != null){
                     val listStory = getStoryResponse.listStory
-
+                    Log.d("HOME_DBG", listStory?.size.toString());
+                    adapter?.setListStory(listStory as List<StoryItem>);
                 }
             }
 

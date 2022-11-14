@@ -1,5 +1,6 @@
 package net.husnilkamil.dicodingstory.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,11 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
     private var listStory = ArrayList<StoryItem>()
     private var listener: StoryItemClickListener? = null
 
-    fun setListStory(listStory: ArrayList<StoryItem>) {
-        this.listStory = listStory
+    fun setListStory(listStory: List<StoryItem>) {
+        this.listStory.clear()
+        this.listStory.addAll(listStory)
+        Log.d("ADAPTER_DBG", listStory.size.toString())
+        this.notifyDataSetChanged()
     }
 
     fun setListener(listener: StoryItemClickListener?) {
