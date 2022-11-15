@@ -8,10 +8,13 @@
 
     <ImageView
         android:id="@+id/ivPhoto"
-        android:layout_width="240dp"
-        android:layout_height="237dp"
+        android:layout_width="0dp"
+        android:layout_height="365dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
@@ -21,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
@@ -31,13 +34,13 @@
         app:layout_constraintBottom_toTopOf="@+id/button_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
 
     <Button
         android:id="@+id/button_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tambah"
+        android:text="@string/tambah"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ed_add_description" />
 
@@ -45,18 +48,32 @@
         android:id="@+id/button_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Camera"
+        android:layout_marginEnd="128dp"
+        android:text="@string/camera"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivPhoto"
-        app:layout_constraintTop_toTopOf="@+id/ivPhoto" />
+        app:layout_constraintStart_toStartOf="@+id/ivPhoto"
+        app:layout_constraintTop_toTopOf="@+id/button_galery" />
 
     <Button
         android:id="@+id/button_galery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gallery"
-        app:layout_constraintEnd_toEndOf="@+id/button_camera"
-        app:layout_constraintStart_toStartOf="@+id/button_camera"
-        app:layout_constraintTop_toBottomOf="@+id/button_camera" />
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/gallery"
+        app:layout_constraintEnd_toEndOf="@+id/ivPhoto"
+        app:layout_constraintStart_toStartOf="@+id/ivPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/ivPhoto" />
+
+    <ProgressBar
+        android:id="@+id/progressUpload"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

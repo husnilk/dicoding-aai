@@ -19,7 +19,7 @@ private const val FILENAME_FORMAT = "dd-MMM-yyyy"
 val timeStamp: String =
     SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
 
-fun createTempFile(context: Context): File {
+fun createCustomTempFile(context: Context): File {
     val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(timeStamp, ".jpg", storageDir)
 }
@@ -38,7 +38,7 @@ fun createFile(application: Application): File {
 
 fun uriToFile(selectedImg: Uri, context: Context): File {
     val contentResolver: ContentResolver = context.contentResolver
-    val myFile = createTempFile(context)
+    val myFile = createCustomTempFile(context)
 
     val inputStream = contentResolver.openInputStream(selectedImg) as InputStream
     val outputStream: OutputStream = FileOutputStream(myFile)

@@ -1,21 +1,31 @@
 package net.husnilkamil.dicodingstory
 
+import android.annotation.SuppressLint
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import net.husnilkamil.dicodingstory.databinding.ActivityDetailStoryBinding
 import net.husnilkamil.dicodingstory.datamodels.StoryItem
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
-class StoryActivity : AppCompatActivity() {
+class DetailStoryActivity : AppCompatActivity() {
+
     var name: String? = null
     var photo: String? = null
     var description: String? = null
     var date: String? = null
     var binding: ActivityDetailStoryBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailStoryBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         val storyIntent = intent
         if (storyIntent != null) {
             val story = storyIntent.getParcelableExtra<StoryItem>("STORY_PARCELABLE")
