@@ -78,9 +78,15 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_logout -> logout()
+            R.id.action_map -> loadmap()
             else -> return super.onOptionsItemSelected(item)
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun loadmap() {
+        val mapIntent = Intent(this@HomeActivity, MapsActivity::class.java)
+        startActivity(mapIntent)
     }
 
     private fun logout() {
@@ -102,7 +108,7 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
     fun getStories(){
         binding!!.progressLoading.visibility = View.VISIBLE
         val service = NetworkConfig.service
-        val response = service.getAllStories(getToken(this))
+        val response = service.getAllStories(getToken(this), 1)
         response.enqueue(object : Callback<GetStoryResponse?>{
 
             override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
