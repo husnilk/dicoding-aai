@@ -1,19 +1,14 @@
-package net.husnilkamil.dicodingstory
+package net.husnilkamil.dicodingstory.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import net.husnilkamil.dicodingstory.*
 import net.husnilkamil.dicodingstory.adapters.StoryAdapter
 import net.husnilkamil.dicodingstory.databinding.ActivityHomeBinding
 import net.husnilkamil.dicodingstory.datamodels.GetStoryResponse
@@ -21,6 +16,10 @@ import net.husnilkamil.dicodingstory.datamodels.StoryItem
 import net.husnilkamil.dicodingstory.helpers.Constant
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.ui.addstory.AddStoryActivity
+import net.husnilkamil.dicodingstory.ui.detailstory.DetailStoryActivity
+import net.husnilkamil.dicodingstory.ui.login.LoginActivity
+import net.husnilkamil.dicodingstory.ui.maps.MapsActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

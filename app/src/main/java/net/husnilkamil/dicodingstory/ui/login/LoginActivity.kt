@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory
+package net.husnilkamil.dicodingstory.ui.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -7,10 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import net.husnilkamil.dicodingstory.ui.register.RegisterActivity
 import net.husnilkamil.dicodingstory.databinding.ActivityLoginBinding
 import net.husnilkamil.dicodingstory.datamodels.LoginResponse
 import net.husnilkamil.dicodingstory.helpers.Constant
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.ui.home.HomeActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val model = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         binding.textRegister.setOnClickListener{
             val registerIntent = Intent(applicationContext, RegisterActivity::class.java)

@@ -49,35 +49,35 @@
             android:value="AIzaSyDGI1R7XS3JsTlfznjaY5XvJQEylZgzkbk" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".ui.maps.MapsActivity"
             android:exported="false"
-            android:parentActivityName=".HomeActivity"
+            android:parentActivityName=".ui.home.HomeActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".DetailStoryActivity"
+            android:name=".ui.detailstory.DetailStoryActivity"
             android:exported="false"
-            android:parentActivityName=".HomeActivity" >
+            android:parentActivityName=".ui.home.HomeActivity" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddStoryActivity"
+            android:name=".ui.addstory.AddStoryActivity"
             android:exported="false"
-            android:parentActivityName=".HomeActivity" >
+            android:parentActivityName=".ui.home.HomeActivity" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.register.RegisterActivity"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true"
             android:theme="@style/Theme.DicodingStory.NoActionBar" >
             <intent-filter>
@@ -91,7 +91,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.DicodingStory.NoActionBar" >
             <meta-data

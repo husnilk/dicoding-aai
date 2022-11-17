@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory
+package net.husnilkamil.dicodingstory.ui.detailstory
 
 import android.annotation.SuppressLint
 import android.os.Build
