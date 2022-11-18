@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory
+package net.husnilkamil.dicodingstory.ui.addstory
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
 import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
-import net.husnilkamil.dicodingstory.helpers.Constant
 import net.husnilkamil.dicodingstory.helpers.createCustomTempFile
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.helpers.uriToFile
@@ -26,8 +25,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Multipart
-import retrofit2.http.Part
 import java.io.File
 import java.io.IOException
 

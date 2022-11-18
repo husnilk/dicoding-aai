@@ -38,6 +38,7 @@ interface DicodingStoryService {
     @GET("/v1/stories")
     fun getAllStories(
         @Header("Authorization") token: String,
+        @Query("location") location: Int
     ): Call<GetStoryResponse>
 
     @GET("/v1/stories/{id}")

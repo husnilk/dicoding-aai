@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory
+package net.husnilkamil.dicodingstory.ui.register
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +11,7 @@ import android.widget.Toast
 import net.husnilkamil.dicodingstory.databinding.ActivityRegisterBinding
 import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.ui.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
