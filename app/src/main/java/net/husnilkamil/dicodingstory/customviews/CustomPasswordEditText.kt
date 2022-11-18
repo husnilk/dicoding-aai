@@ -28,10 +28,13 @@ class CustomPasswordEditText : AppCompatEditText {
 
     private fun showErrorIcon() {
         setCompoundDrawablesWithIntrinsicBounds(null, null, errorIcon, null)
+        error = "Password Anda kurang aman"
+
     }
 
     private fun hideErrorIcon() {
         setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        error = null
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -46,7 +49,7 @@ class CustomPasswordEditText : AppCompatEditText {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 if (!charSequence.toString().isEmpty()) {
-                    if (charSequence.toString().length <= 6) {
+                    if (charSequence.toString().length < 6) {
                         showErrorIcon()
                     } else {
                         hideErrorIcon()
