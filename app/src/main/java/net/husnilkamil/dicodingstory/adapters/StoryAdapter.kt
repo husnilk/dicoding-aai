@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import net.husnilkamil.dicodingstory.R
-import net.husnilkamil.dicodingstory.datamodels.StoryItem
+import net.husnilkamil.dicodingstory.models.StoryItem
 
 class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
 

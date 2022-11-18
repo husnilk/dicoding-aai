@@ -2,10 +2,8 @@ package net.husnilkamil.dicodingstory.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import net.husnilkamil.dicodingstory.datamodels.GetStoryResponse
-import net.husnilkamil.dicodingstory.datamodels.StoryItem
+import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.networks.DicodingStoryService
-import retrofit2.http.Query
 
 class StoryPagingSource(private val service: DicodingStoryService) : PagingSource<Int, StoryItem >(){
 

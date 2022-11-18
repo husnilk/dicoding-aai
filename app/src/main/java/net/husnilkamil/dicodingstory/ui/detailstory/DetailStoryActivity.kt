@@ -1,15 +1,10 @@
 package net.husnilkamil.dicodingstory.ui.detailstory
 
-import android.annotation.SuppressLint
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
 import net.husnilkamil.dicodingstory.databinding.ActivityDetailStoryBinding
-import net.husnilkamil.dicodingstory.datamodels.StoryItem
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.util.*
+import net.husnilkamil.dicodingstory.models.StoryItem
 
 class DetailStoryActivity : AppCompatActivity() {
 

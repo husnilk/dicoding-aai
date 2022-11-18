@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import net.husnilkamil.dicodingstory.*
 import net.husnilkamil.dicodingstory.adapters.StoryAdapter
 import net.husnilkamil.dicodingstory.databinding.ActivityHomeBinding
-import net.husnilkamil.dicodingstory.datamodels.GetStoryResponse
-import net.husnilkamil.dicodingstory.datamodels.StoryItem
+import net.husnilkamil.dicodingstory.models.GetStoryResponse
+import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.helpers.Constant
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.networks.NetworkConfig

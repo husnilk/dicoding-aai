@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.datamodels
+package net.husnilkamil.dicodingstory.models
 
 import com.google.gson.annotations.SerializedName
 

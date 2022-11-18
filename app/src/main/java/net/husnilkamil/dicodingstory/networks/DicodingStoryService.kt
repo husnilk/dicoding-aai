@@ -1,9 +1,9 @@
 package net.husnilkamil.dicodingstory.networks
 
-import net.husnilkamil.dicodingstory.datamodels.DetailResponse
-import net.husnilkamil.dicodingstory.datamodels.GetStoryResponse
-import net.husnilkamil.dicodingstory.datamodels.LoginResponse
-import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
+import net.husnilkamil.dicodingstory.models.DetailResponse
+import net.husnilkamil.dicodingstory.models.GetStoryResponse
+import net.husnilkamil.dicodingstory.models.LoginResponse
+import net.husnilkamil.dicodingstory.models.ObjectResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call

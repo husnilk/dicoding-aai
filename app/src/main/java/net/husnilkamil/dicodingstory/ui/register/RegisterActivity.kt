@@ -3,13 +3,10 @@ package net.husnilkamil.dicodingstory.ui.register
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import net.husnilkamil.dicodingstory.databinding.ActivityRegisterBinding
-import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
+import net.husnilkamil.dicodingstory.models.ObjectResponse
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.ui.login.LoginActivity
 import retrofit2.Call

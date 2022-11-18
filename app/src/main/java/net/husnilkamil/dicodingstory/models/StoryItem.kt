@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.datamodels
+package net.husnilkamil.dicodingstory.models
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable

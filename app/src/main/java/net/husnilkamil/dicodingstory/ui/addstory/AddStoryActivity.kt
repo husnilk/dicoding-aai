@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
-import net.husnilkamil.dicodingstory.datamodels.ObjectResponse
+import net.husnilkamil.dicodingstory.models.ObjectResponse
 import net.husnilkamil.dicodingstory.helpers.createCustomTempFile
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.helpers.uriToFile

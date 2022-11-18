@@ -16,7 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import net.husnilkamil.dicodingstory.R
 import net.husnilkamil.dicodingstory.databinding.ActivityMapsBinding
-import net.husnilkamil.dicodingstory.datamodels.GetStoryResponse
+import net.husnilkamil.dicodingstory.models.GetStoryResponse
 import net.husnilkamil.dicodingstory.helpers.getToken
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
 import retrofit2.Call

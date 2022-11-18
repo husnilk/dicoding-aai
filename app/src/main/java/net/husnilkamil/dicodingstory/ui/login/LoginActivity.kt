@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import net.husnilkamil.dicodingstory.ui.register.RegisterActivity
 import net.husnilkamil.dicodingstory.databinding.ActivityLoginBinding
-import net.husnilkamil.dicodingstory.datamodels.LoginResponse
+import net.husnilkamil.dicodingstory.models.LoginResponse
 import net.husnilkamil.dicodingstory.helpers.Constant
 import net.husnilkamil.dicodingstory.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.ui.home.HomeActivity
