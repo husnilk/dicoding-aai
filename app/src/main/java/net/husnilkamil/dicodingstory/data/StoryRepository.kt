@@ -1,35 +1,42 @@
 package net.husnilkamil.dicodingstory.data
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import net.husnilkamil.dicodingstory.helpers.getToken
-import net.husnilkamil.dicodingstory.models.GetStoryResponse
+import net.husnilkamil.dicodingstory.data.db.StoryDao
+import net.husnilkamil.dicodingstory.utils.getToken
+import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
 import net.husnilkamil.dicodingstory.models.StoryItem
-import net.husnilkamil.dicodingstory.networks.DicodingStoryService
+import net.husnilkamil.dicodingstory.data.networks.DicodingStoryService
+import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.utils.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class StoryRepository private constructor(
-    private val service: DicodingStoryService,
+    private val apiService: DicodingStoryService,
+    private val storyDao: StoryDao,
+    private val executors: AppExecutors,
     private val context: Context
 ) {
     private val result = MediatorLiveData<Result<List<StoryItem>>>()
-    private val stories = MutableLiveData<List<StoryItem>>()
 
-    fun getListStory() : LiveData<Result<List<StoryItem>>> {
+    fun getAllStories() : LiveData<Result<List<StoryItem>>>{
         result.value = Result.Loading
-        val service = service.getAllStories(getToken(context), 1)
-        service.enqueue(object : Callback<GetStoryResponse?> {
 
-            override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
+        val client = apiService.getAllStories(getToken(context), 1)
+        client.enqueue(object: Callback<GetStoryResponse> {
+            override fun onResponse(call: Call<GetStoryResponse>, response: Response<GetStoryResponse>) {
                 var getStoryResponse : GetStoryResponse? = response.body()
                 if(getStoryResponse != null){
                     val listStory = getStoryResponse.listStory
-                    stories.value = (listStory as List<StoryItem>?)!!
+                    storyDao.deleteAll()
+                    storyDao.insertAll(listStory);
                 }
             }
 
@@ -37,13 +44,32 @@ class StoryRepository private constructor(
                 result.value = Result.Error(t.message.toString())
             }
         })
-
-        result.addSource(stories) {
-            newData: List<StoryItem> ->
-                result.value = net.husnilkamil.dicodingstory.data.Result.Success(newData)
-
+        val localData = storyDao.getAllStories()
+        result.addSource(localData){ newData: List<StoryItem> ->
+            result.value = Result.Success(newData)
         }
 
         return result
     }
+
+    fun insert(storyItem: StoryItem){
+
+    }
+
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        @Volatile
+        private var instance: StoryRepository? = null
+        fun getInstance(
+            apiService: DicodingStoryService,
+            storyDao: StoryDao,
+            appExecutors: AppExecutors,
+            context: Context): StoryRepository =
+            instance ?: synchronized(this) {
+                instance ?: StoryRepository(apiService, storyDao, appExecutors, context)
+            }.also {
+                instance = it
+            }
+    }
+
 }

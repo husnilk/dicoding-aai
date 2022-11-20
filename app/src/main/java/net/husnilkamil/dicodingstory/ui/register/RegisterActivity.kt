@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import net.husnilkamil.dicodingstory.databinding.ActivityRegisterBinding
-import net.husnilkamil.dicodingstory.models.ObjectResponse
-import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
+import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.ui.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -47,7 +47,7 @@ class RegisterActivity : AppCompatActivity() {
         val response = service.registerUser(username, email, password)
         response.enqueue(object : Callback<ObjectResponse?> {
 
-            override fun onResponse(call: Call<ObjectResponse?>,response: Response<ObjectResponse?>)
+            override fun onResponse(call: Call<ObjectResponse?>, response: Response<ObjectResponse?>)
             {
                 val registrationResponse = response.body()
 

@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.networks
+package net.husnilkamil.dicodingstory.data.networks
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

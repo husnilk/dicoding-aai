@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.helpers
+package net.husnilkamil.dicodingstory.utils
 
 import android.app.Application
 import android.content.ContentResolver

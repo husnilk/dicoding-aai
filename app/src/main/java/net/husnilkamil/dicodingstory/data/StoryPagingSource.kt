@@ -3,7 +3,7 @@ package net.husnilkamil.dicodingstory.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import net.husnilkamil.dicodingstory.models.StoryItem
-import net.husnilkamil.dicodingstory.networks.DicodingStoryService
+import net.husnilkamil.dicodingstory.data.networks.DicodingStoryService
 
 class StoryPagingSource(private val service: DicodingStoryService) : PagingSource<Int, StoryItem >(){
 

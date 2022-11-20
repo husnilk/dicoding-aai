@@ -1,6 +1,7 @@
-package net.husnilkamil.dicodingstory.models
+package net.husnilkamil.dicodingstory.data.networks.Response
 
 import com.google.gson.annotations.SerializedName
+import net.husnilkamil.dicodingstory.models.StoryItem
 
 data class DetailResponse(
 

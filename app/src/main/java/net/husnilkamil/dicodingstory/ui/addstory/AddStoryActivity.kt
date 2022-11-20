@@ -12,11 +12,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
-import net.husnilkamil.dicodingstory.models.ObjectResponse
-import net.husnilkamil.dicodingstory.helpers.createCustomTempFile
-import net.husnilkamil.dicodingstory.helpers.getToken
-import net.husnilkamil.dicodingstory.helpers.uriToFile
-import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
+import net.husnilkamil.dicodingstory.utils.createCustomTempFile
+import net.husnilkamil.dicodingstory.utils.getToken
+import net.husnilkamil.dicodingstory.utils.uriToFile
+import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -110,7 +110,7 @@ class AddStoryActivity : AppCompatActivity() {
             val response = service.addStories(getToken(this), imageMultiPart, desc)
             response.enqueue(object : Callback<ObjectResponse?> {
 
-                override fun onResponse(call: Call<ObjectResponse?>,response: Response<ObjectResponse?>) {
+                override fun onResponse(call: Call<ObjectResponse?>, response: Response<ObjectResponse?>) {
                     val objectResponse = response.body()
                     Log.d("ADD-DBG", response.toString())
                     if (objectResponse != null && !objectResponse.error!!) {

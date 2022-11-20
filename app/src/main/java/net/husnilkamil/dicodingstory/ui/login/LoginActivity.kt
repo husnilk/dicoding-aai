@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import net.husnilkamil.dicodingstory.ui.register.RegisterActivity
 import net.husnilkamil.dicodingstory.databinding.ActivityLoginBinding
-import net.husnilkamil.dicodingstory.models.LoginResponse
-import net.husnilkamil.dicodingstory.helpers.Constant
-import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.data.networks.Response.LoginResponse
+import net.husnilkamil.dicodingstory.utils.Constant
+import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.ui.home.HomeActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
         val response = service.loginUser(email, password)
         response.enqueue(object : Callback<LoginResponse?> {
 
-            override fun onResponse(call: Call<LoginResponse?>,response: Response<LoginResponse?>) {
+            override fun onResponse(call: Call<LoginResponse?>, response: Response<LoginResponse?>) {
                 val loginResponse = response.body()
                 if (loginResponse != null) {
                     val loginResult = loginResponse.loginResult

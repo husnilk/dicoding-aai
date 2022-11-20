@@ -7,15 +7,18 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import net.husnilkamil.dicodingstory.*
 import net.husnilkamil.dicodingstory.adapters.StoryAdapter
 import net.husnilkamil.dicodingstory.databinding.ActivityHomeBinding
-import net.husnilkamil.dicodingstory.models.GetStoryResponse
+import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
 import net.husnilkamil.dicodingstory.models.StoryItem
-import net.husnilkamil.dicodingstory.helpers.Constant
-import net.husnilkamil.dicodingstory.helpers.getToken
-import net.husnilkamil.dicodingstory.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.utils.Constant
+import net.husnilkamil.dicodingstory.utils.getToken
+import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.ui.StoryListViewModel
 import net.husnilkamil.dicodingstory.ui.addstory.AddStoryActivity
 import net.husnilkamil.dicodingstory.ui.detailstory.DetailStoryActivity
 import net.husnilkamil.dicodingstory.ui.login.LoginActivity
@@ -29,12 +32,18 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
     private var binding: ActivityHomeBinding? = null
     private var isLoggedIn = false
     private var adapter: StoryAdapter? = null
+    private lateinit var storyListViewModel: StoryListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setSupportActionBar(binding!!.toolbar)
+
+        storyListViewModel = ViewModelProvider(this).get(StoryListViewModel::class.java)
+        storyListViewModel.getAllStories().observe(this, Observer<List<StoryItem>>(){
+
+        })
 
         binding!!.progressLoading.visibility = View.GONE
         binding!!.fab.setOnClickListener {
@@ -127,4 +136,5 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         })
     }
 }
+
 

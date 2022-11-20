@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.helpers;
+package net.husnilkamil.dicodingstory.utils;
 
 public class Constant {
     public static final String PREF_KEY_FILE_NAME = "net.husnilkamil.ceritakita.PREFS_FILE";

@@ -2,7 +2,7 @@ package net.husnilkamil.dicodingstory.models
 
 import com.google.gson.annotations.SerializedName
 
-data class LoginResult(
+data class Auth(
 
     @field:SerializedName("name")
     val name: String? = null,
