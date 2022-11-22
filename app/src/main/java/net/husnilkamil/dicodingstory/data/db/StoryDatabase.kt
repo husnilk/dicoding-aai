@@ -6,10 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import net.husnilkamil.dicodingstory.models.StoryItem
 
-@Database(entities = [StoryItem::class], version = 1, exportSchema = false)
-abstract  class StoryDatabase : RoomDatabase() {
+@Database(entities = [StoryItem::class], version = 1)
+abstract class StoryDatabase : RoomDatabase() {
 
-    abstract  fun storyDao() : StoryDao
+    abstract fun storyDao() : StoryDao
 
     companion object {
         @Volatile

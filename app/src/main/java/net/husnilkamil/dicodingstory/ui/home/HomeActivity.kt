@@ -56,16 +56,15 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         val factory = ViewModelFactory.getInstance(this@HomeActivity)
         storyListViewModel = ViewModelProvider(this, factory).get(StoryListViewModel::class.java)
         binding.progressLoading.visibility = View.VISIBLE
-        storyListViewModel.getAllStories().observe(this@HomeActivity) { stories ->
+        storyListViewModel.stories.observe(this) { stories ->
             binding.progressLoading.visibility = View.GONE
-            adapter.setListStory(stories)
+            adapter.submitData(lifecycle, stories)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        getStories()
-    }
+//    override fun onStart() {
+//        super.onStart()
+//    }
 
     private val isLoggedInCheck: Unit
         get() {
@@ -116,28 +115,28 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         startActivity(storyIntent)
     }
 
-    fun getStories(){
-        binding!!.progressLoading.visibility = View.VISIBLE
-        val service = NetworkConfig.service
-        val response = service.getAllStories(getToken(this), 1)
-        response.enqueue(object : Callback<GetStoryResponse?>{
-
-            override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
-                var getStoryResponse : GetStoryResponse? = response.body()
-                if(getStoryResponse != null){
-                    val listStory = getStoryResponse.listStory
-                    adapter?.setListStory(listStory as List<StoryItem>);
-                }
-                binding!!.progressLoading.visibility = View.GONE
-            }
-
-            override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
-                Toast.makeText(this@HomeActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
-                binding!!.progressLoading.visibility = View.GONE
-            }
-
-        })
-    }
+//    fun getStories(){
+//        binding!!.progressLoading.visibility = View.VISIBLE
+//        val service = NetworkConfig.service
+//        val response = service.getAllStories(getToken(this), 1)
+//        response.enqueue(object : Callback<GetStoryResponse?>{
+//
+//            override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
+//                var getStoryResponse : GetStoryResponse? = response.body()
+//                if(getStoryResponse != null){
+//                    val listStory = getStoryResponse.listStory
+//                    adapter?.setListStory(listStory as List<StoryItem>);
+//                }
+//                binding!!.progressLoading.visibility = View.GONE
+//            }
+//
+//            override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
+//                Toast.makeText(this@HomeActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
+//                binding!!.progressLoading.visibility = View.GONE
+//            }
+//
+//        })
+//    }
 }
 
 

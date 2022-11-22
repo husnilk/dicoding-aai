@@ -26,7 +26,6 @@ interface DicodingStoryService {
         @Field("password") password: String?
     ): Call<LoginResponse>
 
-
     @Multipart
     @POST("/v1/stories")
     fun addStories(
@@ -37,6 +36,12 @@ interface DicodingStoryService {
 
     @GET("/v1/stories")
     fun getAllStories(
+        @Header("Authorization") token: String,
+        @Query("location") location: Int
+    ): GetStoryResponse
+
+    @GET("/v1/stories")
+    fun getAllStoriesWithLocation(
         @Header("Authorization") token: String,
         @Query("location") location: Int
     ): Call<GetStoryResponse>

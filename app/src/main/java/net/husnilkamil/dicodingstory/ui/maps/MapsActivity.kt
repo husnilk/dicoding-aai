@@ -64,7 +64,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun getStories() {
         val service = NetworkConfig.service
-        val response = service.getAllStories(getToken(this), 1)
+        val response = service.getAllStoriesWithLocation(getToken(this), 1)
         response.enqueue(object : Callback<GetStoryResponse?> {
 
             override fun onResponse(

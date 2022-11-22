@@ -3,17 +3,17 @@ package net.husnilkamil.dicodingstory.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import net.husnilkamil.dicodingstory.data.db.StoryDao
-import net.husnilkamil.dicodingstory.utils.getToken
-import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
-import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.data.networks.DicodingStoryService
 import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
 import net.husnilkamil.dicodingstory.data.networks.request.StoryRequest
+import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.utils.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,32 +29,43 @@ class StoryRepository private constructor(
     private val resultAllStories = MediatorLiveData<List<StoryItem>>()
     private val resultAddStory = MediatorLiveData<ObjectResponse>()
 
-    fun getAllStories(): LiveData<List<StoryItem>> {
-
-        val client = apiService.getAllStories(getToken(context), 1)
-        client.enqueue(object : Callback<GetStoryResponse> {
-            override fun onResponse(
-                call: Call<GetStoryResponse>,
-                response: Response<GetStoryResponse>
-            ) {
-                var getStoryResponse: GetStoryResponse? = response.body()
-                if (getStoryResponse != null) {
-                    val listStory = getStoryResponse.listStory
-                    storyDao.deleteAll()
-                    storyDao.insertAll(listStory);
-                }
+    fun getAllStories(): LiveData<PagingData<StoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                storyDao.getAllStories()
             }
-
-            override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
-            }
-        })
-        val localData = storyDao.getAllStories()
-        resultAllStories.addSource(localData) { newData: List<StoryItem> ->
-            resultAllStories.value = newData
-        }
-
-        return resultAllStories
+        ).liveData
     }
+
+//    fun getAllStories(): LiveData<List<StoryItem>> {
+//
+//        val client = apiService.getAllStories(getToken(context), 1)
+//        client.enqueue(object : Callback<GetStoryResponse> {
+//            override fun onResponse(
+//                call: Call<GetStoryResponse>,
+//                response: Response<GetStoryResponse>
+//            ) {
+//                var getStoryResponse: GetStoryResponse? = response.body()
+//                if (getStoryResponse != null) {
+//                    val listStory = getStoryResponse.listStory
+//                    storyDao.deleteAll()
+//                    storyDao.insertAll(listStory);
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
+//            }
+//        })
+//        val localData = storyDao.getAllStories()
+//        resultAllStories.addSource(localData) { newData: List<StoryItem> ->
+//            resultAllStories.value = newData
+//        }
+//
+//        return resultAllStories
+//    }
 
     fun insert(storyRequest: StoryRequest): LiveData<ObjectResponse> {
         val response = apiService.addStories(
