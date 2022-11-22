@@ -20,6 +20,7 @@ import net.husnilkamil.dicodingstory.utils.uriToFile
 import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.data.networks.request.StoryRequest
 import net.husnilkamil.dicodingstory.ui.ViewModelFactory
+import net.husnilkamil.dicodingstory.ui.home.HomeActivity
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -120,6 +121,8 @@ class AddStoryActivity : AppCompatActivity() {
                     Toast.makeText(this, "Oops terjadi kesalahan", Toast.LENGTH_SHORT).show()
                 }else{
                     Toast.makeText(this, "Berhasil tambah story", Toast.LENGTH_SHORT).show()
+                    val homeIntent = Intent(this@AddStoryActivity, HomeActivity::class.java)
+                    startActivity(homeIntent)
                 }
             }
             

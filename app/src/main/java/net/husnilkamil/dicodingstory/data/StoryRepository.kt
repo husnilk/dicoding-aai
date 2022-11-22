@@ -2,6 +2,7 @@ package net.husnilkamil.dicodingstory.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -24,6 +25,7 @@ class StoryRepository private constructor(
     private val executors: AppExecutors,
     private val context: Context
 ) {
+    private val TAG: String = "StoryRepository-dbg"
     private val resultAllStories = MediatorLiveData<List<StoryItem>>()
     private val resultAddStory = MediatorLiveData<ObjectResponse>()
 
@@ -56,21 +58,21 @@ class StoryRepository private constructor(
 
     fun insert(storyRequest: StoryRequest): LiveData<ObjectResponse> {
         val response = apiService.addStories(
-            "Bearer $storyRequest.token",
+            storyRequest.token,
             storyRequest.file,
             storyRequest.description
         )
         response.enqueue(object : Callback<ObjectResponse?> {
 
-            override fun onResponse(
-                call: Call<ObjectResponse?>,
-                response: Response<ObjectResponse?>
-            ) {
+            override fun onResponse( call: Call<ObjectResponse?>, response: Response<ObjectResponse?> ) {
+                Log.d(TAG, response.toString())
                 val objectResponse: ObjectResponse? = response.body()
                 if (objectResponse != null && !objectResponse.error!!) {
                     if (!objectResponse.error) {
                         resultAddStory.value = objectResponse!!
                     }
+                }else{
+                    resultAddStory.value = ObjectResponse(true, "Oops")
                 }
             }
 
