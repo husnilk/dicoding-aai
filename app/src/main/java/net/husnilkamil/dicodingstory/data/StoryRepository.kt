@@ -6,13 +6,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import net.husnilkamil.dicodingstory.data.db.StoryDao
 import net.husnilkamil.dicodingstory.utils.getToken
 import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
 import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.data.networks.DicodingStoryService
-import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
+import net.husnilkamil.dicodingstory.data.networks.request.StoryRequest
 import net.husnilkamil.dicodingstory.utils.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,16 +24,19 @@ class StoryRepository private constructor(
     private val executors: AppExecutors,
     private val context: Context
 ) {
-    private val result = MediatorLiveData<Result<List<StoryItem>>>()
+    private val resultAllStories = MediatorLiveData<List<StoryItem>>()
+    private val resultAddStory = MediatorLiveData<ObjectResponse>()
 
-    fun getAllStories() : LiveData<Result<List<StoryItem>>>{
-        result.value = Result.Loading
+    fun getAllStories(): LiveData<List<StoryItem>> {
 
         val client = apiService.getAllStories(getToken(context), 1)
-        client.enqueue(object: Callback<GetStoryResponse> {
-            override fun onResponse(call: Call<GetStoryResponse>, response: Response<GetStoryResponse>) {
-                var getStoryResponse : GetStoryResponse? = response.body()
-                if(getStoryResponse != null){
+        client.enqueue(object : Callback<GetStoryResponse> {
+            override fun onResponse(
+                call: Call<GetStoryResponse>,
+                response: Response<GetStoryResponse>
+            ) {
+                var getStoryResponse: GetStoryResponse? = response.body()
+                if (getStoryResponse != null) {
                     val listStory = getStoryResponse.listStory
                     storyDao.deleteAll()
                     storyDao.insertAll(listStory);
@@ -41,19 +44,41 @@ class StoryRepository private constructor(
             }
 
             override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
-                result.value = Result.Error(t.message.toString())
             }
         })
         val localData = storyDao.getAllStories()
-        result.addSource(localData){ newData: List<StoryItem> ->
-            result.value = Result.Success(newData)
+        resultAllStories.addSource(localData) { newData: List<StoryItem> ->
+            resultAllStories.value = newData
         }
 
-        return result
+        return resultAllStories
     }
 
-    fun insert(storyItem: StoryItem){
+    fun insert(storyRequest: StoryRequest): LiveData<ObjectResponse> {
+        val response = apiService.addStories(
+            "Bearer $storyRequest.token",
+            storyRequest.file,
+            storyRequest.description
+        )
+        response.enqueue(object : Callback<ObjectResponse?> {
 
+            override fun onResponse(
+                call: Call<ObjectResponse?>,
+                response: Response<ObjectResponse?>
+            ) {
+                val objectResponse: ObjectResponse? = response.body()
+                if (objectResponse != null && !objectResponse.error!!) {
+                    if (!objectResponse.error) {
+                        resultAddStory.value = objectResponse!!
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ObjectResponse?>, t: Throwable) {
+                resultAddStory.value = ObjectResponse(true, t.message.toString());
+            }
+        })
+        return resultAddStory
     }
 
     companion object {
@@ -64,7 +89,8 @@ class StoryRepository private constructor(
             apiService: DicodingStoryService,
             storyDao: StoryDao,
             appExecutors: AppExecutors,
-            context: Context): StoryRepository =
+            context: Context
+        ): StoryRepository =
             instance ?: synchronized(this) {
                 instance ?: StoryRepository(apiService, storyDao, appExecutors, context)
             }.also {

@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.ui
+package net.husnilkamil.dicodingstory.ui.home
 
 import androidx.lifecycle.ViewModel
 import net.husnilkamil.dicodingstory.data.StoryRepository

@@ -8,17 +8,17 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import net.husnilkamil.dicodingstory.*
-import net.husnilkamil.dicodingstory.adapters.StoryAdapter
 import net.husnilkamil.dicodingstory.databinding.ActivityHomeBinding
 import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
 import net.husnilkamil.dicodingstory.models.StoryItem
 import net.husnilkamil.dicodingstory.utils.Constant
 import net.husnilkamil.dicodingstory.utils.getToken
 import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
-import net.husnilkamil.dicodingstory.ui.StoryListViewModel
+import net.husnilkamil.dicodingstory.ui.ViewModelFactory
 import net.husnilkamil.dicodingstory.ui.addstory.AddStoryActivity
 import net.husnilkamil.dicodingstory.ui.detailstory.DetailStoryActivity
 import net.husnilkamil.dicodingstory.ui.login.LoginActivity
@@ -29,9 +29,9 @@ import retrofit2.Response
 
 class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
 
-    private var binding: ActivityHomeBinding? = null
+    private lateinit var binding: ActivityHomeBinding
     private var isLoggedIn = false
-    private var adapter: StoryAdapter? = null
+    private lateinit var adapter: StoryAdapter
     private lateinit var storyListViewModel: StoryListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +39,6 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
         setSupportActionBar(binding!!.toolbar)
-
-        storyListViewModel = ViewModelProvider(this).get(StoryListViewModel::class.java)
-        storyListViewModel.getAllStories().observe(this, Observer<List<StoryItem>>(){
-
-        })
 
         binding!!.progressLoading.visibility = View.GONE
         binding!!.fab.setOnClickListener {
@@ -57,6 +52,14 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         val layoutManager = GridLayoutManager(this, 2)
         binding!!.rvListCerita.layoutManager = layoutManager
         isLoggedInCheck
+
+        val factory = ViewModelFactory.getInstance(this@HomeActivity)
+        storyListViewModel = ViewModelProvider(this, factory).get(StoryListViewModel::class.java)
+        binding.progressLoading.visibility = View.VISIBLE
+        storyListViewModel.getAllStories().observe(this@HomeActivity) { stories ->
+            binding.progressLoading.visibility = View.GONE
+            adapter.setListStory(stories)
+        }
     }
 
     override fun onStart() {

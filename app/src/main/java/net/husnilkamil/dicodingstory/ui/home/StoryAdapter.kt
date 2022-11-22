@@ -1,4 +1,4 @@
-package net.husnilkamil.dicodingstory.adapters
+package net.husnilkamil.dicodingstory.ui.home
 
 import android.util.Log
 import android.view.LayoutInflater

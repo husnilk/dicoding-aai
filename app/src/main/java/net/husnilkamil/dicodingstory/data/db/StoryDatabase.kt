@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import net.husnilkamil.dicodingstory.models.StoryItem
 
-@Database(entities = [StoryItem::class], version = 1)
+@Database(entities = [StoryItem::class], version = 1, exportSchema = false)
 abstract  class StoryDatabase : RoomDatabase() {
 
     abstract  fun storyDao() : StoryDao
@@ -23,7 +23,8 @@ abstract  class StoryDatabase : RoomDatabase() {
                         context.applicationContext,
                         StoryDatabase::class.java,
                         "story_db"
-                    ).build()
+                    ).allowMainThreadQueries()
+                        .build()
                 }
             }
             return instance as StoryDatabase

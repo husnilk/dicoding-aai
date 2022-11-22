@@ -2,8 +2,10 @@ package net.husnilkamil.dicodingstory.models
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "story")
@@ -31,8 +33,9 @@ data class StoryItem(
     val lon: Double? = null,
 
     @field:SerializedName("id")
+    @PrimaryKey
     @ColumnInfo(name = "id")
-    val id: String? = null,
+    val id: String,
 
     @field:SerializedName("lat")
     @ColumnInfo(name = "lat")

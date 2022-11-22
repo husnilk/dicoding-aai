@@ -11,12 +11,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
 import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
 import net.husnilkamil.dicodingstory.utils.createCustomTempFile
 import net.husnilkamil.dicodingstory.utils.getToken
 import net.husnilkamil.dicodingstory.utils.uriToFile
 import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
+import net.husnilkamil.dicodingstory.data.networks.request.StoryRequest
+import net.husnilkamil.dicodingstory.ui.ViewModelFactory
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -30,9 +33,10 @@ import java.io.IOException
 
 class AddStoryActivity : AppCompatActivity() {
 
-    private var binding: ActivityAddStoryBinding? = null
+    private lateinit var binding: ActivityAddStoryBinding
     private var currentPhotoPath: String? = null
     private var uploadFile: File? = null
+    private lateinit var addStoryViewModel: AddStoryViewModel
 
     var launcherGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -97,7 +101,6 @@ class AddStoryActivity : AppCompatActivity() {
 
     private fun uploadStory() {
 
-        binding!!.progressUpload.visibility = View.VISIBLE
         if (uploadFile != null) {
             val description = binding!!.edAddDescription.text.toString()
 
@@ -106,48 +109,20 @@ class AddStoryActivity : AppCompatActivity() {
             val imageMultiPart: MultipartBody.Part =
                 MultipartBody.Part.createFormData("photo", uploadFile!!.name, img)
 
-            val service = NetworkConfig.service
-            val response = service.addStories(getToken(this), imageMultiPart, desc)
-            response.enqueue(object : Callback<ObjectResponse?> {
+            val storyRequest = StoryRequest(getToken(this@AddStoryActivity), desc, imageMultiPart)
 
-                override fun onResponse(call: Call<ObjectResponse?>, response: Response<ObjectResponse?>) {
-                    val objectResponse = response.body()
-                    Log.d("ADD-DBG", response.toString())
-                    if (objectResponse != null && !objectResponse.error!!) {
-                        if (!objectResponse.error) {
-                            Toast.makeText(
-                                this@AddStoryActivity,
-                                objectResponse.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            finish()
-                        } else {
-                            Toast.makeText(
-                                this@AddStoryActivity,
-                                objectResponse.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    } else {
-                        Toast.makeText(
-                            this@AddStoryActivity,
-                            "Gagal Upload Story",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    binding!!.progressUpload.visibility = View.GONE
+            val factory = ViewModelFactory.getInstance(this)
+            addStoryViewModel = ViewModelProvider(this, factory).get(AddStoryViewModel::class.java)
+            binding.progressUpload.visibility = View.VISIBLE
+            addStoryViewModel.uploadStory(storyRequest).observe(this) {
+                binding.progressUpload.visibility = View.GONE
+                if(it.error == true){
+                    Toast.makeText(this, "Oops terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this, "Berhasil tambah story", Toast.LENGTH_SHORT).show()
                 }
-
-                override fun onFailure(call: Call<ObjectResponse?>, t: Throwable) {
-                    Log.d("ADD-DBG", t.message.toString())
-                    Toast.makeText(
-                        this@AddStoryActivity,
-                        "Terjadi kesalahan teknis",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    binding!!.progressUpload.visibility = View.GONE
-                }
-            })
+            }
+            
         } else {
             Toast.makeText(
                 this@AddStoryActivity,
