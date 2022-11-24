@@ -9,8 +9,7 @@ object Injection {
     fun provideRepository(context: Context): StoryRepository {
         val apiService = NetworkConfig.service
         val database = StoryDatabase.getDatabase(context)
-        val dao = database.storyDao()
-        val appExecutors = AppExecutors()
-        return StoryRepository.getInstance(apiService, dao, appExecutors, context)
+//        val appExecutors = AppExecutors()
+        return StoryRepository.getInstance(apiService, database,  context)
     }
 }

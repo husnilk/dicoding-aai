@@ -5,11 +5,9 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.liveData
+import androidx.paging.*
 import net.husnilkamil.dicodingstory.data.db.StoryDao
+import net.husnilkamil.dicodingstory.data.db.StoryDatabase
 import net.husnilkamil.dicodingstory.data.networks.DicodingStoryService
 import net.husnilkamil.dicodingstory.data.networks.Response.ObjectResponse
 import net.husnilkamil.dicodingstory.data.networks.request.StoryRequest
@@ -21,21 +19,22 @@ import retrofit2.Response
 
 class StoryRepository private constructor(
     private val apiService: DicodingStoryService,
-    private val storyDao: StoryDao,
-    private val executors: AppExecutors,
+    private val database: StoryDatabase,
     private val context: Context
 ) {
     private val TAG: String = "StoryRepository-dbg"
-    private val resultAllStories = MediatorLiveData<List<StoryItem>>()
+//    private val resultAllStories = MediatorLiveData<List<StoryItem>>()
     private val resultAddStory = MediatorLiveData<ObjectResponse>()
 
     fun getAllStories(): LiveData<PagingData<StoryItem>> {
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 5
             ),
+            remoteMediator = StoryRemoteMediator(database, apiService, context),
             pagingSourceFactory = {
-                storyDao.getAllStories()
+                database.storyDao().getAllStories()
             }
         ).liveData
     }
@@ -100,12 +99,12 @@ class StoryRepository private constructor(
         private var instance: StoryRepository? = null
         fun getInstance(
             apiService: DicodingStoryService,
-            storyDao: StoryDao,
-            appExecutors: AppExecutors,
+            database: StoryDatabase,
+//            appExecutors: AppExecutors,
             context: Context
         ): StoryRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryRepository(apiService, storyDao, appExecutors, context)
+                instance ?: StoryRepository(apiService, database, context)
             }.also {
                 instance = it
             }

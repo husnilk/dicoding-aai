@@ -2,69 +2,71 @@ package net.husnilkamil.dicodingstory.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import net.husnilkamil.dicodingstory.*
+import net.husnilkamil.dicodingstory.R
 import net.husnilkamil.dicodingstory.databinding.ActivityHomeBinding
-import net.husnilkamil.dicodingstory.data.networks.Response.GetStoryResponse
 import net.husnilkamil.dicodingstory.models.StoryItem
-import net.husnilkamil.dicodingstory.utils.Constant
-import net.husnilkamil.dicodingstory.utils.getToken
-import net.husnilkamil.dicodingstory.data.networks.NetworkConfig
 import net.husnilkamil.dicodingstory.ui.ViewModelFactory
 import net.husnilkamil.dicodingstory.ui.addstory.AddStoryActivity
 import net.husnilkamil.dicodingstory.ui.detailstory.DetailStoryActivity
 import net.husnilkamil.dicodingstory.ui.login.LoginActivity
 import net.husnilkamil.dicodingstory.ui.maps.MapsActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import net.husnilkamil.dicodingstory.utils.Constant
+
 
 class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
 
     private lateinit var binding: ActivityHomeBinding
     private var isLoggedIn = false
     private lateinit var adapter: StoryAdapter
-    private lateinit var storyListViewModel: StoryListViewModel
+    private val storyListViewModel: StoryListViewModel by viewModels { ViewModelFactory(this)    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding!!.root)
-        setSupportActionBar(binding!!.toolbar)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        binding!!.progressLoading.visibility = View.GONE
-        binding!!.fab.setOnClickListener {
+        StrictMode.setVmPolicy(
+            VmPolicy.Builder(StrictMode.getVmPolicy())
+                .detectLeakedClosableObjects()
+                .build()
+        )
+
+        isLoggedInCheck
+
+        binding.fab.setOnClickListener {
             val addIntent = Intent(this@HomeActivity, AddStoryActivity::class.java)
             startActivity(addIntent)
         }
 
-        adapter = StoryAdapter()
-        adapter!!.setListener(this)
-        binding!!.rvListCerita.adapter = adapter
-        val layoutManager = GridLayoutManager(this, 2)
-        binding!!.rvListCerita.layoutManager = layoutManager
-        isLoggedInCheck
 
-        val factory = ViewModelFactory.getInstance(this@HomeActivity)
-        storyListViewModel = ViewModelProvider(this, factory).get(StoryListViewModel::class.java)
-        binding.progressLoading.visibility = View.VISIBLE
-        storyListViewModel.stories.observe(this) { stories ->
-            binding.progressLoading.visibility = View.GONE
-            adapter.submitData(lifecycle, stories)
-        }
+        binding.rvListCerita.layoutManager = GridLayoutManager(this, 2)
+
+        getData()
+
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//    }
+    private fun getData(){
+        adapter = StoryAdapter()
+        binding.rvListCerita.adapter = adapter.withLoadStateFooter(
+            footer = LoadingAdapter{
+                adapter.retry()
+            }
+        )
+
+        storyListViewModel.stories.observe(this, { stories ->
+            adapter.submitData(lifecycle, stories)
+        })
+
+        adapter.setListener(this)
+    }
 
     private val isLoggedInCheck: Unit
         get() {
@@ -95,7 +97,7 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
     }
 
     private fun loadmap() {
-        val mapIntent = Intent(this@HomeActivity, MapsActivity::class.java)
+        val mapIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapIntent)
     }
 
@@ -115,28 +117,6 @@ class HomeActivity : AppCompatActivity(), StoryAdapter.StoryItemClickListener {
         startActivity(storyIntent)
     }
 
-//    fun getStories(){
-//        binding!!.progressLoading.visibility = View.VISIBLE
-//        val service = NetworkConfig.service
-//        val response = service.getAllStories(getToken(this), 1)
-//        response.enqueue(object : Callback<GetStoryResponse?>{
-//
-//            override fun onResponse(call: Call<GetStoryResponse?>, response: Response<GetStoryResponse?>) {
-//                var getStoryResponse : GetStoryResponse? = response.body()
-//                if(getStoryResponse != null){
-//                    val listStory = getStoryResponse.listStory
-//                    adapter?.setListStory(listStory as List<StoryItem>);
-//                }
-//                binding!!.progressLoading.visibility = View.GONE
-//            }
-//
-//            override fun onFailure(call: Call<GetStoryResponse?>, t: Throwable) {
-//                Toast.makeText(this@HomeActivity, "Terjadi kendala teknis", Toast.LENGTH_SHORT).show()
-//                binding!!.progressLoading.visibility = View.GONE
-//            }
-//
-//        })
-//    }
 }
 
 

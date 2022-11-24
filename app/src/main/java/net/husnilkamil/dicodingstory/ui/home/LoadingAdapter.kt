@@ -7,7 +7,6 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import net.husnilkamil.dicodingstory.databinding.ItemLoadingBinding
-import net.husnilkamil.dicodingstory.databinding.ItemStoryBinding
 
 class LoadingAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadingAdapter.LoadingStateViewHolder>() {
 

@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import net.husnilkamil.dicodingstory.databinding.ActivityAddStoryBinding
@@ -37,7 +38,7 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var currentPhotoPath: String? = null
     private var uploadFile: File? = null
-    private lateinit var addStoryViewModel: AddStoryViewModel
+    private val addStoryViewModel: AddStoryViewModel by viewModels { ViewModelFactory(this) }
 
     var launcherGallery =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -59,7 +60,7 @@ class AddStoryActivity : AppCompatActivity() {
                 val myFile = File(currentPhotoPath)
                 uploadFile = myFile
                 val imageBitmap = BitmapFactory.decodeFile(myFile.path)
-                binding!!.ivPhoto.setImageBitmap(imageBitmap)
+                binding.ivPhoto.setImageBitmap(imageBitmap)
             }
         }
 
@@ -68,11 +69,11 @@ class AddStoryActivity : AppCompatActivity() {
         binding = ActivityAddStoryBinding.inflate(
             layoutInflater
         )
-        setContentView(binding!!.root)
-        binding!!.progressUpload.visibility = View.GONE
-        binding!!.buttonAdd.setOnClickListener { uploadStory() }
-        binding!!.buttonCamera.setOnClickListener { takePicture() }
-        binding!!.buttonGalery.setOnClickListener { pickImage() }
+        setContentView(binding.root)
+        binding.progressUpload.visibility = View.GONE
+        binding.buttonAdd.setOnClickListener { uploadStory() }
+        binding.buttonCamera.setOnClickListener { takePicture() }
+        binding.buttonGalery.setOnClickListener { pickImage() }
     }
 
     private fun pickImage() {
@@ -112,8 +113,6 @@ class AddStoryActivity : AppCompatActivity() {
 
             val storyRequest = StoryRequest(getToken(this@AddStoryActivity), desc, imageMultiPart)
 
-            val factory = ViewModelFactory.getInstance(this)
-            addStoryViewModel = ViewModelProvider(this, factory).get(AddStoryViewModel::class.java)
             binding.progressUpload.visibility = View.VISIBLE
             addStoryViewModel.uploadStory(storyRequest).observe(this) {
                 binding.progressUpload.visibility = View.GONE

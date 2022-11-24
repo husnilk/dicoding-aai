@@ -12,7 +12,7 @@ import net.husnilkamil.dicodingstory.models.StoryItem
 
 @Dao
 interface StoryDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(stories: List<StoryItem>)
 
     @Query("SELECT * FROM story ORDER BY id ASC")

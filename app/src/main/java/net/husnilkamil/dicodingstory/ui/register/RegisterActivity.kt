@@ -74,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
             {
                 Toast.makeText(
                     this@RegisterActivity,
-                    "Terjadi kendala teknis. Registrasi gagal",
+                    t.message.toString(),
                     Toast.LENGTH_SHORT
                 ).show()
                 binding!!.progressRegistrasi.visibility = View.GONE
